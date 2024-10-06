@@ -1,0 +1,13 @@
+ProductController
+    getProduct
+    addProduct
+    getOneProduct
+    rateProduct
+    filterProduct
+    Add Products to cart
+    Get Products for cart
+    Remove items from cart
+
+UserController
+    Signup - Email, name, password, type of user(customer, seller)
+    Signin - Email password

@@ -1,0 +1,57 @@
+You can't call any static method assosiated with any class by the instance of the class,
+you will have to call directly by its class name.
+
+export vs default export;
+export is for multiple exports.
+default export is for when you want to export only one value from module.
+
+
+//Find the average rating of a product.
+
+db.products.aggregate([
+    //1. Create documents for rating.
+    //Search more about '$unwind'.
+    {
+        $unwind: "$ratings",
+    },
+    //2. Group rating per product and get average
+    {
+        $group{
+            _id:"$name",
+            averageRating: {$avg: "$ratings.rating"}
+        }
+    }
+])
+
+
+//Number of total rating assosiated with each product.
+
+db.products.aggregate([
+    //1. Project name of product and countOfRating.
+    {
+        $Project:{name:1, countOfRating:{
+            $cond{if:{$isArray: "$ratings"},
+            then:{$size:"$ratings"}, else:0}
+        }}
+    }
+])
+
+
+
+//Product with the highest number of rating.
+
+db.products.aggregate([
+    //1. Project name of product and countOfRating.
+    // Search more about '$cond'.
+    {
+        $Project:{name:1, countOfRating:{
+            $cond{if:{$isArray: "$ratings"},
+            then:{$size:"$ratings"}, else:0}
+        }}
+    }
+    //2. Sort the collection
+    $sort:{countOfRating: -1}
+
+    //3. Limit to just one item in result.
+    $limit:1
+])
